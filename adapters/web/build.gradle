@@ -22,3 +22,4 @@ test {
     useJUnitPlatform()
     systemProperty 'de.adesso.junitinsights.enabled', 'true'
 }
+apply from: file('../../setupTestsReports.gradle')
