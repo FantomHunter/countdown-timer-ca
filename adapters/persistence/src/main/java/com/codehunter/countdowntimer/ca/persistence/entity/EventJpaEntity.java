@@ -19,7 +19,7 @@ public class EventJpaEntity {
     private String name;
     @Column(name = "time")
     private Date publicTime;
-    @Column(columnDefinition = "varchar(25) default 'CREATE'")
+    @Column(columnDefinition = "varchar(25) default 'CREATED'")
     @Enumerated(EnumType.STRING)
     private EventStatus status = EventStatus.CREATED;
 
