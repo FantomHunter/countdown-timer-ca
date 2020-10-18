@@ -1,0 +1,9 @@
+rootProject.name = 'countdown-timer-ca'
+include 'common'
+include 'adapters:web'
+include 'adapters:persistence'
+include 'domains'
+include 'usecases'
+include 'configuration'
+include 'testdata'
+

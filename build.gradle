@@ -1,0 +1,29 @@
+plugins {
+    id "io.spring.dependency-management" version "1.0.10.RELEASE"
+}
+
+subprojects {
+
+    group = 'com.codehunter'
+    version = '0.0.1-SNAPSHOT'
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+
+    repositories {
+        jcenter()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:2.3.4.RELEASE")
+        }
+    }
+
+    compileJava {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+}
