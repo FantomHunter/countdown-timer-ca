@@ -35,12 +35,34 @@ public class CreateEventControllerTest {
                         "    \"eventTime\": \"2020-12-22\"\n" +
                         "}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-            ).andExpect(status().isOk());
-        SimpleDateFormat formater = new SimpleDateFormat("yyy-MM-dd");
-        formater.setTimeZone(TimeZone.getTimeZone("GMT"));
+        ).andExpect(status().isOk());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         then(createEventUseCase).should()
                 .createEvent(eq(new CreateEventUseCase.CreateEventIn("test",
-                        formater.parse("2020-12-22"))));
+                        formatter.parse("2020-12-22"))));
+    }
+
+    @Test
+    void createEvent_withoutEventName_status422AndErrorMessage() throws Exception {
+        mockMvc.perform(post("/event")
+                .content("{\n" +
+                        "    \"eventTime\": \"2020-12-22\"\n" +
+                        "}")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().is4xxClientError())
+                .andExpect(status().reason("Invalid input"));
+    }
+
+    @Test
+    void createEvent_withoutDate_status422AndErrorMessage() throws Exception {
+        mockMvc.perform(post("/event")
+                .content("{\n" +
+                        "    \"name\": \"test\"\n" +
+                        "}")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().is4xxClientError())
+                .andExpect(status().reason("Invalid input"));
     }
 }
