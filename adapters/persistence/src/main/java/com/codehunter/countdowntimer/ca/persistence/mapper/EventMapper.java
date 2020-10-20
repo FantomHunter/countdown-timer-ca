@@ -2,13 +2,13 @@ package com.codehunter.countdowntimer.ca.persistence.mapper;
 
 import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.entity.EventStatus;
-import com.codehunter.countdowntimer.ca.core.port.in.CreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EventMapper {
-    public EventJpaEntity mapToJpaEntity(CreateEventUseCase.CreateEventIn event){
+    public EventJpaEntity mapToJpaEntity(ICreateEventUseCase.CreateEventIn event){
         return new EventJpaEntity(
                 null,
                 event.getEventName(),

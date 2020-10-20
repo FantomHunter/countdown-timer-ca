@@ -1,4 +1,4 @@
-package com.codehunter.countdowntimer.ca.adapter.web.controller;
+package com.codehunter.countdowntimer.ca.adapter.web.controller.payload.request;
 
 import lombok.Data;
 

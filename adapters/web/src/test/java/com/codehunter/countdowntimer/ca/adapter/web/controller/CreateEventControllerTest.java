@@ -1,6 +1,6 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller;
 
-import com.codehunter.countdowntimer.ca.core.port.in.CreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.service.CreateEventService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CreateEventControllerTest {
 
-    private final CreateEventUseCase createEventUseCase = Mockito.mock(CreateEventService.class);
+    private final ICreateEventUseCase createEventUseCase = Mockito.mock(CreateEventService.class);
     private CreateEventController createEventController = new CreateEventController(createEventUseCase);
     private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(this.createEventController).build();
 
@@ -35,7 +35,7 @@ public class CreateEventControllerTest {
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         then(createEventUseCase).should()
-                .createEvent(eq(new CreateEventUseCase.CreateEventIn("test",
+                .createEvent(eq(new ICreateEventUseCase.CreateEventIn("test",
                         formatter.parse("2020-12-22"))));
     }
 

@@ -1,7 +1,8 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller;
 
+import com.codehunter.countdowntimer.ca.adapter.web.controller.payload.request.CreateEventWebDataIn;
 import com.codehunter.countdowntimer.ca.persistence.WebAdapter;
-import com.codehunter.countdowntimer.ca.core.port.in.CreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,14 +17,14 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @Slf4j
 public class CreateEventController {
-    private final CreateEventUseCase createEventUseCase;
+    private final ICreateEventUseCase createEventUseCase;
 
     @PostMapping(path = "/event")
     @ResponseBody
     void createEvent(@RequestBody CreateEventWebDataIn createEventWebDataIn){
         log.info("Create new event {} ", createEventWebDataIn);
         try {
-            CreateEventUseCase.CreateEventIn in = new CreateEventUseCase.CreateEventIn(
+            ICreateEventUseCase.CreateEventIn in = new ICreateEventUseCase.CreateEventIn(
                     createEventWebDataIn.getName(),
                     createEventWebDataIn.getEventTime()
             );

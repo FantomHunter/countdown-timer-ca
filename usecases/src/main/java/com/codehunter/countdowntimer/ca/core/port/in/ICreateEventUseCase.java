@@ -7,17 +7,15 @@ import lombok.Value;
 
 import java.util.Date;
 
-public interface CreateEventUseCase {
+public interface ICreateEventUseCase {
     void createEvent(CreateEventIn createEventIn);
 
     @Value
     @EqualsAndHashCode(callSuper = false)
     class CreateEventIn extends SelfValidating<CreateEventIn> {
-        @NonNull
-        private final String eventName;
+        @NonNull String eventName;
 
-        @NonNull
-        private final Date eventDate;
+        @NonNull Date eventDate;
 
         public CreateEventIn(@NonNull String eventName, @NonNull Date eventDate) {
             this.eventName = eventName;

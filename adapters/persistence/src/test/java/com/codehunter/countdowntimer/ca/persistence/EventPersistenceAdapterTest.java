@@ -1,6 +1,6 @@
 package com.codehunter.countdowntimer.ca.persistence;
 
-import com.codehunter.countdowntimer.ca.core.port.in.CreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
@@ -32,7 +32,7 @@ public class EventPersistenceAdapterTest {
         Date eventTime = simpleDateFormat.parse("2020-18-10");
 
         Event event = adapterUnderTest.createEvent(
-                new CreateEventUseCase.CreateEventIn("event unit test", eventTime));
+                new ICreateEventUseCase.CreateEventIn("event unit test", eventTime));
         assertThat(event.getId().getValue()).isEqualTo(2L);
         assertThat(event.getDate()).isEqualTo(eventTime);
         assertThat(event.getName()).isEqualTo("event unit test");
