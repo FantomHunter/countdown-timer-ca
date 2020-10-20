@@ -1,34 +1,29 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller;
 
 import com.codehunter.countdowntimer.ca.core.port.in.CreateEventUseCase;
-import net.minidev.json.JSONUtil;
+import com.codehunter.countdowntimer.ca.core.service.CreateEventService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.BDDMockito.eq;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CreateEventController.class)
 public class CreateEventControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private CreateEventUseCase createEventUseCase;
+    private final CreateEventUseCase createEventUseCase = Mockito.mock(CreateEventService.class);
+    private CreateEventController createEventController = new CreateEventController(createEventUseCase);
+    private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(this.createEventController).build();
 
     @Test
-    void createEvent() throws Exception {
+    void createEvent_withAllValidInput_status200AndDataIsPassedToService() throws Exception {
         mockMvc.perform(post("/event")
                 .content(" {\n" +
                         "    \"name\": \"test\",\n" +
