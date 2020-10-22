@@ -1,6 +1,6 @@
-package com.codehunter.countdowntimer.ca.adapter.web.api;
+package com.codehunter.countdowntimer.ca.adapter.web.api.createevent;
 
-import com.codehunter.countdowntimer.ca.adapter.web.api.payload.request.CreateEventWebDataIn;
+import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventWebDataIn;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;

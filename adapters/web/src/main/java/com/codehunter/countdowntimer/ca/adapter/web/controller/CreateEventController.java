@@ -1,7 +1,7 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller;
 
-import com.codehunter.countdowntimer.ca.adapter.web.api.ICreateEventApi;
-import com.codehunter.countdowntimer.ca.adapter.web.api.payload.request.CreateEventWebDataIn;
+import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.ICreateEventApi;
+import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventWebDataIn;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.persistence.WebAdapter;
 import lombok.RequiredArgsConstructor;
