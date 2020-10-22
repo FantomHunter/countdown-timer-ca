@@ -9,14 +9,4 @@ public class CountdownTimerCleanArchitectureApplication {
         SpringApplication.run(CountdownTimerCleanArchitectureApplication.class, args);
     }
 
-//    @Autowired
-//    EventRepository eventRepository;
-//    @Autowired
-//    EventMapper eventMapper;
-//    @Bean
-//    public CreateEventPort createEventPort(){
-//        return new EventPersistenceAdapter(eventRepository, eventMapper);
-//    }
-
-    
 }

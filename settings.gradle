@@ -6,4 +6,5 @@ include 'domains'
 include 'usecases'
 include 'configuration'
 include 'testdata'
+include 'api'
 

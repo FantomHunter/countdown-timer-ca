@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CreateEventControllerTest {
 
     private final ICreateEventUseCase createEventUseCase = Mockito.mock(CreateEventService.class);
-    private CreateEventController createEventController = new CreateEventController(createEventUseCase);
+    private final CreateEventController createEventController = new CreateEventController(createEventUseCase);
     private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(this.createEventController).build();
 
     @Test
