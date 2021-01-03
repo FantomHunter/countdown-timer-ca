@@ -8,5 +8,5 @@ public interface ICreateEventApi {
 
     @PostMapping(path = "/event")
     @ResponseBody
-    void createEvent(@RequestBody CreateEventRequest createEventRequest);
+    CreateEventResponse createEvent(@RequestBody CreateEventRequest createEventRequest);
 }

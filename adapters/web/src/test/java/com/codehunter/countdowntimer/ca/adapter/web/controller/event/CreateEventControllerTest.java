@@ -1,8 +1,9 @@
-package com.codehunter.countdowntimer.ca.adapter.web.controller;
+package com.codehunter.countdowntimer.ca.adapter.web.controller.event;
 
 import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventRequest;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.service.CreateEventService;
+import com.codehunter.countdowntimer.ca.domain.Event;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
@@ -10,21 +11,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.eq;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CreateEventControllerTest {
 
     private final ICreateEventUseCase createEventUseCase = Mockito.mock(CreateEventService.class);
-    private final CreateEventController createEventController = new CreateEventController(createEventUseCase);
+    private final CreateEventController createEventController = new CreateEventController(createEventUseCase, new CreateEventConverter());
     private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(this.createEventController).build();
 
     @Test
     void createEvent_withAllValidInput_status200AndDataIsPassedToService() throws Exception {
+        when(createEventUseCase.createEvent(any(ICreateEventUseCase.CreateEventIn.class)))
+                .thenReturn(Event.withId(new Event.EventId(1L),"title", new Date()));
+
         mockMvc.perform(post("/event")
                 .content(String.format(CreateEventRequest.TEMPLATE, "test","2020-12-22"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

@@ -15,7 +15,7 @@ public class CreateEventService implements ICreateEventUseCase {
     private final ICreateEventPort createEventPort;
 
     @Override
-    public void createEvent(CreateEventIn createEventIn) {
-        Event event = createEventPort.createEvent(createEventIn);
+    public Event createEvent(CreateEventIn createEventIn) {
+        return createEventPort.createEvent(createEventIn);
     }
 }
