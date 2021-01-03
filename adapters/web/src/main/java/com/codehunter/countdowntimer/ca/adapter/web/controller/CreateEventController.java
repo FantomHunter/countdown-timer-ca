@@ -1,7 +1,7 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller;
 
 import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.ICreateEventApi;
-import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventWebDataIn;
+import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventRequest;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.persistence.WebAdapter;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +18,12 @@ public class CreateEventController implements ICreateEventApi {
     private final ICreateEventUseCase createEventUseCase;
 
     @Override
-    public void createEvent(CreateEventWebDataIn createEventWebDataIn) {
-        log.info("Create new event {} ", createEventWebDataIn);
+    public void createEvent(CreateEventRequest createEventRequest) {
+        log.info("Create new event {} ", createEventRequest);
         try {
             ICreateEventUseCase.CreateEventIn in = new ICreateEventUseCase.CreateEventIn(
-                    createEventWebDataIn.getName(),
-                    createEventWebDataIn.getEventTime()
+                    createEventRequest.getTitle(),
+                    createEventRequest.getTime()
             );
             createEventUseCase.createEvent(in);
         } catch (NullPointerException e) {

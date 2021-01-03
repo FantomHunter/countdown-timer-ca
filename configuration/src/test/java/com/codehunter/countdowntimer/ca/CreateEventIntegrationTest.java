@@ -1,5 +1,6 @@
 package com.codehunter.countdowntimer.ca;
 
+import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,10 +16,7 @@ public class CreateEventIntegrationTest {
 
     @Test
     void createAccount() {
-        String body = " {\n" +
-                "    \"name\": \"test\",\n" +
-                "    \"eventTime\": \"2020-12-22\"\n" +
-                "}";
+        String body = String.format(CreateEventRequest.TEMPLATE, "birthday", "2020-12-22");
         ResponseEntity response = whenCreateEvent(body);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);

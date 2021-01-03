@@ -1,5 +1,6 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller;
 
+import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventRequest;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.service.CreateEventService;
 import org.junit.jupiter.api.Test;
@@ -25,10 +26,7 @@ public class CreateEventControllerTest {
     @Test
     void createEvent_withAllValidInput_status200AndDataIsPassedToService() throws Exception {
         mockMvc.perform(post("/event")
-                .content(" {\n" +
-                        "    \"name\": \"test\",\n" +
-                        "    \"eventTime\": \"2020-12-22\"\n" +
-                        "}")
+                .content(String.format(CreateEventRequest.TEMPLATE, "test","2020-12-22"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         ).andExpect(status().isOk());
         SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
