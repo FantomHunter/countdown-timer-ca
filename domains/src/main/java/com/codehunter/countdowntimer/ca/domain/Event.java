@@ -2,12 +2,14 @@ package com.codehunter.countdowntimer.ca.domain;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Value;
 
 import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public class Event {
     @Getter private final EventId id;
     @Getter private final String name;

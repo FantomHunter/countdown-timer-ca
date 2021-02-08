@@ -15,14 +15,14 @@ public class CreateEventIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    void createAccount() {
+    void createEvent() {
         String body = String.format(CreateEventRequest.TEMPLATE, "birthday", "2020-12-22");
-        ResponseEntity response = whenCreateEvent(body);
+        ResponseEntity<Object> response = whenCreateEvent(body);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    private ResponseEntity whenCreateEvent(String body) {
+    private ResponseEntity<Object> whenCreateEvent(String body) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         HttpEntity<String> request = new HttpEntity<String>(body, headers);
