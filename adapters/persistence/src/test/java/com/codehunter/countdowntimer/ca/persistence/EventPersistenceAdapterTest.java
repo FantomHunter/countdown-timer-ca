@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -46,7 +47,7 @@ public class EventPersistenceAdapterTest {
     @Sql("EventPersistenceAdapterTest.sql")
     void getAllEvent_shouldReturn1Event(){
         Date eventTime = new GregorianCalendar(2020, 9, 18, 16, 0, 0).getTime();
-        List<Event> expected = List.of(Event.withId(new Event.EventId(1L), "event from sql unit test", eventTime));
+        List<Event> expected = Arrays.asList(Event.withId(new Event.EventId(1L), "event from sql unit test", eventTime));
         List<Event> actual = adapterUnderTest.getAllEvents();
         assertEquals(expected.size(), actual.size());
         assertEquals(expected.get(0), actual.get(0));

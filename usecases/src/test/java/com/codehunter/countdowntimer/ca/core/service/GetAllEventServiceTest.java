@@ -12,6 +12,7 @@ import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -28,8 +29,8 @@ public class GetAllEventServiceTest {
     
     @Test
     public void getAllEvent_whenGetAllEventPortReturned_thenReturnAll(){
-        List<Event> expected = List.of(Event.withId(new Event.EventId(1L), "name", new GregorianCalendar(2021,5, 19).getTime()));
-        when(getAllEventPort.getAllEvents()).thenReturn(List.of(Event.withId(new Event.EventId(1L), "name", new GregorianCalendar(2021,5, 19).getTime())));
+        List<Event> expected = Arrays.asList(Event.withId(new Event.EventId(1L), "name", new GregorianCalendar(2021,5, 19).getTime()));
+        when(getAllEventPort.getAllEvents()).thenReturn(Arrays.asList(Event.withId(new Event.EventId(1L), "name", new GregorianCalendar(2021,5, 19).getTime())));
         List<Event> actual = getAllEventService.getAllEvent();
         assertEquals(expected.size(), actual.size());
         assertEquals(expected.get(0), actual.get(0));
