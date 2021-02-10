@@ -26,4 +26,32 @@ subprojects {
         targetCompatibility = 1.8
     }
 
+    task customBuildAll(dependsOn: ['build']){
+       doLast {
+           project -> println "build for $project"
+        //    project -> 
+        //        if (project == ":configuration:customBuildAll") {
+        //            copyToBuild
+        //        }
+       }
+    }
 }
+
+    task stage(dependsOn: [':configuration:build']) {
+        doLast {
+            copy {
+                println "finish build $project"
+                def buildPath = project('configuration').buildDir
+                from "$buildPath/libs"
+                into "$buildDir/libs"
+            }
+        }
+    }
+
+    task copyToBuild(type: Copy) {
+        println "finish build $project"
+        def buildPath = project('configuration').buildDir
+        from "$buildPath/libs"
+        into "$buildDir/libs"
+    }
+    
