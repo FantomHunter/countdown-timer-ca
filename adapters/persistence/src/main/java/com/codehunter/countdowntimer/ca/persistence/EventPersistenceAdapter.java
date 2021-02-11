@@ -6,7 +6,7 @@ import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
 
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,6 @@ public class EventPersistenceAdapter implements ICreateEventPort, IGetAllEventPo
         if (!CollectionUtils.isEmpty(out)) {
             return out.stream().map(item ->eventMapper.mapToEvent(item)).collect(Collectors.toList());
         }
-        return Arrays.asList();
+        return Collections.emptyList();
     }
 }

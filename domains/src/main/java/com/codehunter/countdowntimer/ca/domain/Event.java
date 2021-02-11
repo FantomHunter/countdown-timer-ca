@@ -25,7 +25,7 @@ public class Event {
 
     @Value
     public static class EventId {
-       private Long value;
+       Long value;
     }
 
 }
