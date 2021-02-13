@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
+import javax.persistence.EntityNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,7 +43,7 @@ public class EventPersistenceAdapterTest {
 
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
-    void getAllEvent_shouldReturn1Event(){
+    void getAllEvent_shouldReturn1Event() {
         Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
         List<Event> expected = Collections.singletonList(Event.withId(new Event.EventId(1L), "event from sql unit test", eventTime));
         List<Event> actual = adapterUnderTest.getAllEvents();
@@ -50,5 +51,35 @@ public class EventPersistenceAdapterTest {
         assertEquals(expected.get(0), actual.get(0));
     }
 
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void deleteEvent_withValidId_shouldDeleteSuccessfully() {
+        adapterUnderTest.deleteEvent(1L);
+        List<Event> allEvents = adapterUnderTest.getAllEvents();
+        assertEquals(0, allEvents.size());
+    }
 
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void deleteEvent_withInvalidId_thenThrowEntityNotFoundException() {
+        try {
+            adapterUnderTest.deleteEvent(5L);
+        } catch (Exception e) {
+            assertEquals(EntityNotFoundException.class, e.getClass());
+        }
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void hasEvent_withValidId_thenReturnTrue() {
+        boolean actual = adapterUnderTest.hasEvent(1L);
+        assertEquals(true, actual);
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void hasEvent_withInValidId_thenReturnFalse() {
+        boolean actual = adapterUnderTest.hasEvent(5L);
+        assertEquals(false, actual);
+    }
 }
