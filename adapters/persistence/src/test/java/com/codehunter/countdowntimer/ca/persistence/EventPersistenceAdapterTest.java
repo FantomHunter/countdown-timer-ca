@@ -1,7 +1,9 @@
 package com.codehunter.countdowntimer.ca.persistence;
 
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
+import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
 import org.junit.jupiter.api.Test;
@@ -10,12 +12,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
+import javax.persistence.EntityNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,13 +45,70 @@ public class EventPersistenceAdapterTest {
 
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
-    void getAllEvent_shouldReturn1Event(){
-        Date eventTime = new GregorianCalendar(2020, 9, 18, 16, 0, 0).getTime();
-        List<Event> expected = Arrays.asList(Event.withId(new Event.EventId(1L), "event from sql unit test", eventTime));
+    void getAllEvent_shouldReturn1Event() {
+        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        List<Event> expected = Collections.singletonList(Event.withId(new Event.EventId(1L), "event from sql unit test", eventTime));
         List<Event> actual = adapterUnderTest.getAllEvents();
         assertEquals(expected.size(), actual.size());
         assertEquals(expected.get(0), actual.get(0));
     }
 
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void deleteEvent_withValidId_shouldDeleteSuccessfully() {
+        adapterUnderTest.deleteEvent(1L);
+        List<Event> allEvents = adapterUnderTest.getAllEvents();
+        assertEquals(0, allEvents.size());
+    }
 
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void deleteEvent_withInvalidId_thenThrowEntityNotFoundException() {
+        try {
+            adapterUnderTest.deleteEvent(5L);
+        } catch (Exception e) {
+            assertEquals(EntityNotFoundException.class, e.getClass());
+        }
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void hasEvent_withValidId_thenReturnTrue() {
+        boolean actual = adapterUnderTest.hasEvent(1L);
+        assertEquals(true, actual);
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void hasEvent_withInValidId_thenReturnFalse() {
+        boolean actual = adapterUnderTest.hasEvent(5L);
+        assertEquals(false, actual);
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void updateEvent_withNotExistEvent_thenReturnException() {
+        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(5L, "event update", updateTime);
+        try {
+            adapterUnderTest.updateEvent(input);
+        } catch (Exception e) {
+            assertEquals(EntityNotFoundException.class, e.getClass());
+        }
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void updateEvent_withValidEvent_thenReturnUpdatedEvent() {
+        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(1L, "event updated", eventTime);
+        Event actual = adapterUnderTest.updateEvent(input);
+
+        Event expected = Event.withId(new Event.EventId(1L), "event updated", eventTime);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDate(), actual.getDate());
+        assertEquals(expected, actual);
+
+    }
 }

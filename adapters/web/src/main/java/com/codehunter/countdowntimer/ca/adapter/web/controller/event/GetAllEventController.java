@@ -17,8 +17,8 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 public class GetAllEventController implements IGetAllEventApi {
-    private IGetAllEventUseCase getAllEventUseCase;
-    private GetAllEventConverter getAllEventConverter;
+    private final IGetAllEventUseCase getAllEventUseCase;
+    private final GetAllEventConverter getAllEventConverter;
 
     @Override
     public GetAllEventResponse getAllEvent() {

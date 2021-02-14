@@ -3,23 +3,19 @@ package com.codehunter.countdowntimer.ca.adapter.web.controller.event;
 import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventUseCase;
 import com.codehunter.countdowntimer.ca.core.service.GetAllEventService;
 import com.codehunter.countdowntimer.ca.domain.Event;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.*;
+
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class GetAllEventControllerTest {
     private final IGetAllEventUseCase getAllEventUseCase = Mockito.mock(GetAllEventService.class);
@@ -34,8 +30,8 @@ public class GetAllEventControllerTest {
 
     @Test
     void getAllEvent_withUserCaseReturnData_thenReturnData() throws Exception {
-        Date eventTime = new GregorianCalendar(2020, 9, 18, 16, 0, 0).getTime();
-        List<Event> eventList = Arrays.asList(Event.withId(new Event.EventId(1L), "Event name", eventTime));
+        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        List<Event> eventList = Collections.singletonList(Event.withId(new Event.EventId(1L), "Event name", eventTime));
         when(getAllEventUseCase.getAllEvent()).thenReturn(eventList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/event"))
