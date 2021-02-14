@@ -4,6 +4,8 @@ import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventR
 import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventResponse;
 import com.codehunter.countdowntimer.ca.adapter.web.api.deleteevent.DeleteEventResponse;
 import com.codehunter.countdowntimer.ca.adapter.web.api.getallevent.GetAllEventResponse;
+import com.codehunter.countdowntimer.ca.adapter.web.api.updateevent.UpdateEventRequest;
+import com.codehunter.countdowntimer.ca.adapter.web.api.updateevent.UpdateEventResponse;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -55,6 +57,20 @@ public class CreateEventIntegrationTest {
 
     @Test
     @Order(3)
+    void updateEvent() {
+        String body = String.format(UpdateEventRequest.TEMPLATE, "updateEvent", "2020-12-22");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        HttpEntity<String> request = new HttpEntity<String>(body, headers);
+        ResponseEntity<UpdateEventResponse> response = restTemplate.exchange("/event/1",
+                HttpMethod.PUT,
+                request,
+                UpdateEventResponse.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    @Order(4)
     void deleteEvent() {
         HttpEntity<String> request = new HttpEntity<>("", new HttpHeaders());
         ResponseEntity<DeleteEventResponse> responseEntity = restTemplate.exchange("/event/1",

@@ -1,7 +1,9 @@
 package com.codehunter.countdowntimer.ca.persistence;
 
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
+import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
 import org.junit.jupiter.api.Test;
@@ -81,5 +83,32 @@ public class EventPersistenceAdapterTest {
     void hasEvent_withInValidId_thenReturnFalse() {
         boolean actual = adapterUnderTest.hasEvent(5L);
         assertEquals(false, actual);
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void updateEvent_withNotExistEvent_thenReturnException() {
+        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(5L, "event update", updateTime);
+        try {
+            adapterUnderTest.updateEvent(input);
+        } catch (Exception e) {
+            assertEquals(EntityNotFoundException.class, e.getClass());
+        }
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTest.sql")
+    void updateEvent_withValidEvent_thenReturnUpdatedEvent() {
+        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(1L, "event updated", eventTime);
+        Event actual = adapterUnderTest.updateEvent(input);
+
+        Event expected = Event.withId(new Event.EventId(1L), "event updated", eventTime);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDate(), actual.getDate());
+        assertEquals(expected, actual);
+
     }
 }
