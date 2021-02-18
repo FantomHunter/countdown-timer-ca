@@ -1,4 +1,4 @@
-package com.codehunter.countdowntimer.ca.core.port.in;
+package com.codehunter.countdowntimer.ca.core.port.in.event;
 
 import com.codehunter.countdowntimer.ca.persistence.SelfValidating;
 import lombok.EqualsAndHashCode;

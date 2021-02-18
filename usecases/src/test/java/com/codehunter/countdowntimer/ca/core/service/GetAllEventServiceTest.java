@@ -1,7 +1,8 @@
 package com.codehunter.countdowntimer.ca.core.service;
 
-import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventUseCase;
-import com.codehunter.countdowntimer.ca.core.port.out.IGetAllEventPort;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IGetAllEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.out.event.IGetAllEventPort;
+import com.codehunter.countdowntimer.ca.core.service.event.GetAllEventService;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

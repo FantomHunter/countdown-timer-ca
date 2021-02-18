@@ -1,7 +1,8 @@
 package com.codehunter.countdowntimer.ca.core.service;
 
-import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
-import com.codehunter.countdowntimer.ca.core.port.out.ICreateEventPort;
+import com.codehunter.countdowntimer.ca.core.port.in.event.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.out.event.ICreateEventPort;
+import com.codehunter.countdowntimer.ca.core.service.event.CreateEventService;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

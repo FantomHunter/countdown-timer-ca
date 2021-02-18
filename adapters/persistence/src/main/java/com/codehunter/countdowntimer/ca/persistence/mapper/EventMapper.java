@@ -1,9 +1,9 @@
 package com.codehunter.countdowntimer.ca.persistence.mapper;
 
-import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.entity.EventStatus;
-import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import org.springframework.stereotype.Component;
 

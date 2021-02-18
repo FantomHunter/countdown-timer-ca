@@ -3,7 +3,7 @@ package com.codehunter.countdowntimer.ca.adapter.web.controller.event;
 import com.codehunter.countdowntimer.ca.adapter.web.api.updateevent.IUpdateEventApi;
 import com.codehunter.countdowntimer.ca.adapter.web.api.updateevent.UpdateEventRequest;
 import com.codehunter.countdowntimer.ca.adapter.web.api.updateevent.UpdateEventResponse;
-import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.persistence.WebAdapter;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

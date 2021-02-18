@@ -2,7 +2,7 @@ package com.codehunter.countdowntimer.ca.adapter.web.controller.event;
 
 import com.codehunter.countdowntimer.ca.adapter.web.api.deleteevent.DeleteEventResponse;
 import com.codehunter.countdowntimer.ca.adapter.web.api.deleteevent.IDeleteEventApi;
-import com.codehunter.countdowntimer.ca.core.port.in.IDeleteEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IDeleteEventUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import com.codehunter.countdowntimer.ca.adapter.web.api.getallevent.GetAllEventResponse;
 import com.codehunter.countdowntimer.ca.adapter.web.api.getallevent.IGetAllEventApi;
-import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IGetAllEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.persistence.WebAdapter;
 

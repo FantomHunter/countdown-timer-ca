@@ -1,8 +1,8 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller.event;
 
 import com.codehunter.countdowntimer.ca.adapter.web.api.createevent.CreateEventRequest;
-import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
-import com.codehunter.countdowntimer.ca.core.service.CreateEventService;
+import com.codehunter.countdowntimer.ca.core.port.in.event.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.service.event.CreateEventService;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

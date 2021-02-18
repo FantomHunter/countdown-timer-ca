@@ -2,7 +2,7 @@ package com.codehunter.countdowntimer.ca.adapter.web.controller.event;
 
 import com.codehunter.countdowntimer.ca.adapter.web.api.deleteevent.DeleteEventResponse;
 import com.codehunter.countdowntimer.ca.adapter.web.api.deleteevent.IDeleteEventApi;
-import com.codehunter.countdowntimer.ca.core.port.in.IDeleteEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IDeleteEventUseCase;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.BDDMockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

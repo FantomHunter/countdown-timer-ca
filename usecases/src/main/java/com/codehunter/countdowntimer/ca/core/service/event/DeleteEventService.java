@@ -1,8 +1,8 @@
-package com.codehunter.countdowntimer.ca.core.service;
+package com.codehunter.countdowntimer.ca.core.service.event;
 
-import com.codehunter.countdowntimer.ca.core.port.in.IDeleteEventUseCase;
-import com.codehunter.countdowntimer.ca.core.port.out.IDeleteEventPort;
-import com.codehunter.countdowntimer.ca.core.port.out.IHasEventPort;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IDeleteEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.out.event.IDeleteEventPort;
+import com.codehunter.countdowntimer.ca.core.port.out.event.IHasEventPort;
 import com.codehunter.countdowntimer.ca.persistence.UseCase;
 import lombok.RequiredArgsConstructor;
 

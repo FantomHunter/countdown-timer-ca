@@ -1,9 +1,8 @@
 package com.codehunter.countdowntimer.ca.persistence;
 
-import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
-import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
-import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
 import org.junit.jupiter.api.Test;

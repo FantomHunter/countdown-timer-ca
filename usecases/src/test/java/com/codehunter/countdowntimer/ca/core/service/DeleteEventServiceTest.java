@@ -1,8 +1,9 @@
 package com.codehunter.countdowntimer.ca.core.service;
 
-import com.codehunter.countdowntimer.ca.core.port.in.IDeleteEventUseCase;
-import com.codehunter.countdowntimer.ca.core.port.out.IDeleteEventPort;
-import com.codehunter.countdowntimer.ca.core.port.out.IHasEventPort;
+import com.codehunter.countdowntimer.ca.core.port.in.event.IDeleteEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.out.event.IDeleteEventPort;
+import com.codehunter.countdowntimer.ca.core.port.out.event.IHasEventPort;
+import com.codehunter.countdowntimer.ca.core.service.event.DeleteEventService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
