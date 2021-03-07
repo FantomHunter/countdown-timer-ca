@@ -5,6 +5,7 @@ import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventWithUserUseCase
 import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.out.*;
 import com.codehunter.countdowntimer.ca.domain.Event;
+import com.codehunter.countdowntimer.ca.domain.User;
 import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
@@ -45,6 +46,16 @@ public class EventPersistenceAdapter implements ICreateEventPort, IGetAllEventPo
     public List<Event> getAllEvents() {
         log.info("Get All Event");
         List<EventJpaEntity> out = eventRepository.findAll();
+        if (!CollectionUtils.isEmpty(out)) {
+            return out.stream().map(item -> eventMapper.mapToEvent(item)).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Event> getAllEventsWithUser(User user) {
+        log.info("Get all event for user: {}", user);
+        List<EventJpaEntity> out = eventRepository.findByUser(user.getId().getValue());
         if (!CollectionUtils.isEmpty(out)) {
             return out.stream().map(item -> eventMapper.mapToEvent(item)).collect(Collectors.toList());
         }

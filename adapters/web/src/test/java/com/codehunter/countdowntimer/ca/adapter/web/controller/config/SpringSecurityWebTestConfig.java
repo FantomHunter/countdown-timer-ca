@@ -136,6 +136,12 @@ public class SpringSecurityWebTestConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Primary
+    public IGetAllEventWithUserUseCase getAllEventiwGetAllEventWithUserUseCase() {
+        return Mockito.mock(IGetAllEventWithUserUseCase.class);
+    }
+
+    @Bean
+    @Primary
     public IUpdateEventUseCase updateEventUseCase() {
         return Mockito.mock(IUpdateEventUseCase.class);
     }

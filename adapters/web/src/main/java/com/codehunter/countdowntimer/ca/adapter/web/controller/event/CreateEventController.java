@@ -31,7 +31,7 @@ public class CreateEventController implements ICreateEventApi {
 
     @Override
     public CreateEventResponse createEvent(CreateEventRequest createEventRequest) {
-        log.info("Create new event {} ", createEventRequest);
+        log.info("Create new event controller {} ", createEventRequest);
 
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();

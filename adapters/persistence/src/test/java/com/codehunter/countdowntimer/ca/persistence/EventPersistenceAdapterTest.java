@@ -129,4 +129,24 @@ public class EventPersistenceAdapterTest {
         assertEquals(expected, actual);
 
     }
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void getAllEventWithUser_withValidInput_thenReturn1Event() {
+        List<Event> actual = adapterUnderTest.getAllEventsWithUser(
+                User.withId("first-user-id", "don't care"));
+        assertNotNull(actual);
+        assertEquals(1, actual.size());
+        assertEquals("event 1 from sql unit test", actual.get(0).getName());
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void getAllEventWithNonExistedUser_withValidInput_thenReturnEmptyEventList() {
+        List<Event> actual = adapterUnderTest.getAllEventsWithUser(
+                User.withId("non-existed-user-id", "don't care"));
+        assertNotNull(actual);
+        assertEquals(0, actual.size());
+    }
+
 }
