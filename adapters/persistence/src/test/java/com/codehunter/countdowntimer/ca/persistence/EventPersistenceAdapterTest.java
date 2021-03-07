@@ -1,15 +1,18 @@
 package com.codehunter.countdowntimer.ca.persistence;
 
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
-import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
+import com.codehunter.countdowntimer.ca.domain.User;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
+import com.codehunter.countdowntimer.ca.persistence.mapper.UserMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.persistence.EntityNotFoundException;
@@ -17,16 +20,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({EventPersistenceAdapter.class, EventMapper.class})
+@Import({EventPersistenceAdapter.class, EventMapper.class, UserMapper.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class EventPersistenceAdapterTest {
-
     @Autowired
     private EventPersistenceAdapter adapterUnderTest;
-
     @Autowired
     private EventRepository eventRepository;
 
@@ -75,14 +77,14 @@ public class EventPersistenceAdapterTest {
     @Sql("EventPersistenceAdapterTest.sql")
     void hasEvent_withValidId_thenReturnTrue() {
         boolean actual = adapterUnderTest.hasEvent(1L);
-        assertEquals(true, actual);
+        assertTrue(actual);
     }
 
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
     void hasEvent_withInValidId_thenReturnFalse() {
         boolean actual = adapterUnderTest.hasEvent(5L);
-        assertEquals(false, actual);
+        assertFalse(actual);
     }
 
     @Test
@@ -105,6 +107,22 @@ public class EventPersistenceAdapterTest {
         Event actual = adapterUnderTest.updateEvent(input);
 
         Event expected = Event.withId(new Event.EventId(1L), "event updated", eventTime);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDate(), actual.getDate());
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void createEvent_withValidInput_thenReturnNewEvent() {
+        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        User userIn = User.withId("user-id", "user name");
+        ICreateEventWithUserUseCase.CreateEventWithUserIn input = new ICreateEventWithUserUseCase.CreateEventWithUserIn(userIn, "event name", eventTime);
+        Event actual = adapterUnderTest.createEvent(input);
+
+        Event expected = Event.withId(new Event.EventId(3L), "event name", eventTime);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDate(), actual.getDate());

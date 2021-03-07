@@ -1,24 +1,21 @@
 package com.codehunter.countdowntimer.ca.persistence;
 
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.out.*;
+import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Example;
 import org.springframework.util.CollectionUtils;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
-import com.codehunter.countdowntimer.ca.domain.Event;
-import lombok.RequiredArgsConstructor;
-
-import javax.persistence.EntityNotFoundException;
 
 @RequiredArgsConstructor
 @PersistenceAdapter
@@ -32,6 +29,14 @@ public class EventPersistenceAdapter implements ICreateEventPort, IGetAllEventPo
     public Event createEvent(ICreateEventUseCase.CreateEventIn event) {
         log.info("CreateEvent {}", event);
         EventJpaEntity in = eventMapper.mapToJpaEntity(event);
+        EventJpaEntity out = eventRepository.save(in);
+        return eventMapper.mapToEvent(out);
+    }
+
+    @Override
+    public Event createEvent(ICreateEventWithUserUseCase.CreateEventWithUserIn eventWithUserIn) {
+        log.info("Create event with user : {}", eventWithUserIn);
+        EventJpaEntity in = eventMapper.mapToJpaEntity(eventWithUserIn);
         EventJpaEntity out = eventRepository.save(in);
         return eventMapper.mapToEvent(out);
     }
@@ -62,7 +67,7 @@ public class EventPersistenceAdapter implements ICreateEventPort, IGetAllEventPo
     @Override
     public Event updateEvent(IUpdateEventUseCase.UpdateEventIn event) {
         log.info("Update Event {}", event);
-        Boolean hasEvent =  eventRepository.existsById(event.getId());
+        boolean hasEvent =  eventRepository.existsById(event.getId());
         if (hasEvent) {
             EventJpaEntity eventUpdated = eventRepository.save(eventMapper.mapToJpaEntity(event));
             return eventMapper.mapToEvent(eventUpdated);

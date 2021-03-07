@@ -1,4 +1,4 @@
-package com.codehunter.countdowntimer.ca.core.service;
+package com.codehunter.countdowntimer.ca.core;
 
 import com.codehunter.countdowntimer.ca.core.port.in.IDeleteEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.out.IDeleteEventPort;

@@ -1,4 +1,4 @@
-package com.codehunter.countdowntimer.ca.core.service;
+package com.codehunter.countdowntimer.ca.core;
 
 import java.util.List;
 
