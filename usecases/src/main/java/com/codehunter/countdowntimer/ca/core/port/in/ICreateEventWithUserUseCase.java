@@ -16,12 +16,11 @@ public interface ICreateEventWithUserUseCase {
     @Value
     @EqualsAndHashCode(callSuper = false)
     class CreateEventWithUserIn extends SelfValidating<ICreateEventWithUserUseCase.CreateEventWithUserIn> {
-        User user;
+        @NonNull User user;
         @NonNull String eventName;
-
         @NonNull Date eventDate;
 
-        public CreateEventWithUserIn(User user,@NonNull String eventName, @NonNull Date eventDate) {
+        public CreateEventWithUserIn(@NonNull User user, @NonNull String eventName, @NonNull Date eventDate) {
             this.user = user;
             this.eventName = eventName;
             this.eventDate = eventDate;

@@ -149,4 +149,47 @@ public class EventPersistenceAdapterTest {
         assertEquals(0, actual.size());
     }
 
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void hasEventWithUser_withValidEventAndUser_thenReturnTrue() {
+        boolean actual = adapterUnderTest.hasEventWithUser(1L, User.withId("first-user-id", "don't care"));
+        assertTrue(actual);
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void hasEventWithUser_withInValidEvent_thenReturnFalse() {
+        boolean actual = adapterUnderTest.hasEventWithUser(5L, User.withId("first-user-id", "don't care"));
+        assertFalse(actual);
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void hasEventWithUser_withInValidUser_thenReturnFalse() {
+        boolean actual = adapterUnderTest.hasEventWithUser(1L, User.withId("second-user-id", "don't care"));
+        assertFalse(actual);
+    }
+
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void deleteEventWithUser_withValidId_shouldDeleteSuccessfully() {
+        User user = User.withId("first-user-id", "hunter");
+        List<Event> allEventsBefore = adapterUnderTest.getAllEventsWithUser(user);
+        assertEquals(1, allEventsBefore.size());
+        adapterUnderTest.deleteEventWithUser(1L, user);
+        List<Event> allEventsAfter = adapterUnderTest.getAllEventsWithUser(user);
+        assertEquals(0, allEventsAfter.size());
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void deleteEventWithUser_withInvalidId_thenThrowEntityNotFoundException() {
+        try {
+            adapterUnderTest.deleteEventWithUser(5L, User.withId("first-user-id", "hunter"));
+        } catch (Exception e) {
+            assertEquals(EntityNotFoundException.class, e.getClass());
+        }
+    }
+
 }

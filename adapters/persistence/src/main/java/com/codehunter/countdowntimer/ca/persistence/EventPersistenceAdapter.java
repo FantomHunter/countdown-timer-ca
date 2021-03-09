@@ -70,15 +70,33 @@ public class EventPersistenceAdapter implements ICreateEventPort, IGetAllEventPo
     }
 
     @Override
+    public void deleteEventWithUser(Long eventId, User user) {
+        log.info("Delete Event {} for user {}", eventId, user);
+        EventJpaEntity deletedEvent = eventRepository.findByEventIdAndUserId(eventId, user.getId().getValue());
+        if (deletedEvent != null) {
+            eventRepository.delete(deletedEvent);
+        } else {
+            throw new EntityNotFoundException("Event not found");
+        }
+    }
+
+    @Override
     public boolean hasEvent(Long eventId) {
         log.info("Check Has Event with Id {}", eventId);
         return eventRepository.existsById(eventId);
     }
 
     @Override
+    public boolean hasEventWithUser(Long eventId, User user) {
+        log.info("has event {} with user {}", eventId, user);
+        EventJpaEntity eventJpaEntity = eventRepository.findByEventIdAndUserId(eventId, user.getId().getValue());
+        return eventJpaEntity != null;
+    }
+
+    @Override
     public Event updateEvent(IUpdateEventUseCase.UpdateEventIn event) {
         log.info("Update Event {}", event);
-        boolean hasEvent =  eventRepository.existsById(event.getId());
+        boolean hasEvent = eventRepository.existsById(event.getId());
         if (hasEvent) {
             EventJpaEntity eventUpdated = eventRepository.save(eventMapper.mapToJpaEntity(event));
             return eventMapper.mapToEvent(eventUpdated);
