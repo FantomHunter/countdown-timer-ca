@@ -3,6 +3,7 @@ package com.codehunter.countdowntimer.ca.persistence;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.core.port.out.*;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.domain.User;
@@ -65,8 +66,12 @@ public class EventPersistenceAdapter implements ICreateEventPort, IGetAllEventPo
     @Override
     public void deleteEvent(Long eventId) {
         log.info("Delete Event {}", eventId);
-        EventJpaEntity deletedEvent = eventRepository.getOne(eventId);
-        eventRepository.delete(deletedEvent);
+        if (eventRepository.existsById(eventId)) {
+            EventJpaEntity deletedEvent = eventRepository.getOne(eventId);
+            eventRepository.delete(deletedEvent);
+        } else {
+            throw new EntityNotFoundException("Event not found");
+        }
     }
 
     @Override
@@ -99,6 +104,18 @@ public class EventPersistenceAdapter implements ICreateEventPort, IGetAllEventPo
         boolean hasEvent = eventRepository.existsById(event.getId());
         if (hasEvent) {
             EventJpaEntity eventUpdated = eventRepository.save(eventMapper.mapToJpaEntity(event));
+            return eventMapper.mapToEvent(eventUpdated);
+        }
+        throw new EntityNotFoundException("Event not exist");
+    }
+
+    @Override
+    public Event updateEventWithUser(IUpdateEventWithUserUseCase.UpdateEventWithUserIn event) {
+        log.info("Update event with user : {}", event);
+        EventJpaEntity eventJpaEntity = eventMapper.mapToJpaEntity(event);
+        EventJpaEntity eventFound = eventRepository.findByEventIdAndUserId(eventJpaEntity.getId(), eventJpaEntity.getUser().getId());
+        if (eventFound != null) {
+            EventJpaEntity eventUpdated = eventRepository.save(eventJpaEntity);
             return eventMapper.mapToEvent(eventUpdated);
         }
         throw new EntityNotFoundException("Event not exist");

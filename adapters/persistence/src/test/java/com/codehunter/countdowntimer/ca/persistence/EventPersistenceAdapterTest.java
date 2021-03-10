@@ -3,6 +3,7 @@ package com.codehunter.countdowntimer.ca.persistence;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.domain.User;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
@@ -66,11 +67,9 @@ public class EventPersistenceAdapterTest {
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
     void deleteEvent_withInvalidId_thenThrowEntityNotFoundException() {
-        try {
-            adapterUnderTest.deleteEvent(5L);
-        } catch (Exception e) {
-            assertEquals(EntityNotFoundException.class, e.getClass());
-        }
+        assertThrows(EntityNotFoundException.class, () ->
+                adapterUnderTest.deleteEvent(5L)
+        );
     }
 
     @Test
@@ -92,11 +91,9 @@ public class EventPersistenceAdapterTest {
     void updateEvent_withNotExistEvent_thenReturnException() {
         Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
         IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(5L, "event update", updateTime);
-        try {
-            adapterUnderTest.updateEvent(input);
-        } catch (Exception e) {
-            assertEquals(EntityNotFoundException.class, e.getClass());
-        }
+        assertThrows(EntityNotFoundException.class,
+                () -> adapterUnderTest.updateEvent(input)
+        );
     }
 
     @Test
@@ -185,11 +182,35 @@ public class EventPersistenceAdapterTest {
     @Test
     @Sql("EventPersistenceAdapterTestV2.sql")
     void deleteEventWithUser_withInvalidId_thenThrowEntityNotFoundException() {
-        try {
-            adapterUnderTest.deleteEventWithUser(5L, User.withId("first-user-id", "hunter"));
-        } catch (Exception e) {
-            assertEquals(EntityNotFoundException.class, e.getClass());
-        }
+        assertThrows(EntityNotFoundException.class,
+                () -> adapterUnderTest.deleteEventWithUser(5L, User.withId("first-user-id", "hunter"))
+        );
     }
 
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void updateEventWithUser_withNotExistEvent_thenReturnException() {
+        User user = User.withId("first-user-id", "hunter");
+        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        IUpdateEventWithUserUseCase.UpdateEventWithUserIn input = new IUpdateEventWithUserUseCase.UpdateEventWithUserIn(
+                5L, "event update", updateTime, user);
+        assertThrows(EntityNotFoundException.class, () -> adapterUnderTest.updateEventWithUser(input));
+    }
+
+    @Test
+    @Sql("EventPersistenceAdapterTestV2.sql")
+    void updateEventWithUser_withValidEvent_thenReturnUpdatedEvent() {
+        User user = User.withId("first-user-id", "hunter");
+        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        IUpdateEventWithUserUseCase.UpdateEventWithUserIn input = new IUpdateEventWithUserUseCase.UpdateEventWithUserIn(
+                1L, "event updated", eventTime, user);
+        Event actual = adapterUnderTest.updateEventWithUser(input);
+
+        Event expected = Event.withId(new Event.EventId(1L), "event updated", eventTime);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDate(), actual.getDate());
+        assertEquals(expected, actual);
+    }
 }

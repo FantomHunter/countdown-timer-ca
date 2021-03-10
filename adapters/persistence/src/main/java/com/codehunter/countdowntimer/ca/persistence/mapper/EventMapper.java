@@ -3,6 +3,7 @@ package com.codehunter.countdowntimer.ca.persistence.mapper;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.persistence.entity.EventJpaEntity;
 import com.codehunter.countdowntimer.ca.persistence.entity.EventStatus;
@@ -46,6 +47,16 @@ public class EventMapper {
                 event.getTime(),
                 EventStatus.UPDATED,
                 null
+        );
+    }
+
+    public EventJpaEntity mapToJpaEntity(IUpdateEventWithUserUseCase.UpdateEventWithUserIn event) {
+        return new EventJpaEntity(
+                event.getId(),
+                event.getName(),
+                event.getTime(),
+                EventStatus.UPDATED,
+                usermapper.mapToJpaEntity(event.getUser())
         );
     }
 }
