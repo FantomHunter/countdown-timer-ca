@@ -1,0 +1,18 @@
+user get token
+curl --location --request POST 'http://localhost:8083/auth/realms/codehunter/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'client_id=countdown-timer' \
+--data-urlencode 'username=firstuser' \
+--data-urlencode 'password=123123' \
+--data-urlencode 'client_secret=aa108a9d-9884-45bd-95d6-d85e24e9d13c'
+
+admin get token
+curl --location --request POST 'http://localhost:8083/auth/realms/codehunter/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'client_id=countdown-timer' \
+--data-urlencode 'username=firstadmin' \
+--data-urlencode 'password=123123' \
+--data-urlencode 'client_secret=aa108a9d-9884-45bd-95d6-d85e24e9d13c'
+

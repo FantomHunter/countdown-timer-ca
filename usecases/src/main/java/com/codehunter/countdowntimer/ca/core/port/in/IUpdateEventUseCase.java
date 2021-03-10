@@ -1,7 +1,5 @@
 package com.codehunter.countdowntimer.ca.core.port.in;
 
-import com.codehunter.countdowntimer.ca.core.service.UpdateEventService;
-import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.persistence.SelfValidating;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
