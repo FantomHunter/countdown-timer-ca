@@ -20,7 +20,8 @@ import java.util.Collection;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String AUTHORITY_PREFIX = "ROLE_";
-    private static final String CLAIM_ROLES = "roles";
+//    private static final String CLAIM_ROLES = "roles";
+    private static final String CLAIM_ROLES = "http://coundowntimer.com/roles";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {// @formatter:off
