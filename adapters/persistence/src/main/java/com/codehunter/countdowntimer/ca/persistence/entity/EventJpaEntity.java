@@ -22,5 +22,8 @@ public class EventJpaEntity {
     @Column(columnDefinition = "varchar(25) default 'CREATED'")
     @Enumerated(EnumType.STRING)
     private EventStatus status = EventStatus.CREATED;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserJpaEntity user;
 
 }
