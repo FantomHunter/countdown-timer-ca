@@ -7,7 +7,7 @@ import com.codehunter.countdowntimer.ca.core.port.out.IUpdateEventPort;
 import com.codehunter.countdowntimer.ca.persistence.UseCase;
 import lombok.AllArgsConstructor;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 @UseCase
 @AllArgsConstructor

@@ -9,6 +9,7 @@ import com.codehunter.countdowntimer.ca.domain.User;
 import com.codehunter.countdowntimer.ca.persistence.mapper.EventMapper;
 import com.codehunter.countdowntimer.ca.persistence.mapper.UserMapper;
 import com.codehunter.countdowntimer.ca.persistence.repository.EventRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,13 +17,20 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
-import javax.persistence.EntityNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @Import({EventPersistenceAdapter.class, EventMapper.class, UserMapper.class})

@@ -2,7 +2,7 @@ package com.codehunter.countdowntimer.ca.core;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventWithUserUseCase;

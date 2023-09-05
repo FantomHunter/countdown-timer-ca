@@ -1,8 +1,8 @@
 package com.codehunter.countdowntimer.ca.adapter.web.api.createevent;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
 @Data

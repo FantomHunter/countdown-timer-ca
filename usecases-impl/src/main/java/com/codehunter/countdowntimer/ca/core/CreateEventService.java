@@ -9,7 +9,7 @@ import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.persistence.UseCase;
 import lombok.RequiredArgsConstructor;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 @UseCase
 @RequiredArgsConstructor

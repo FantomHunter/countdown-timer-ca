@@ -8,7 +8,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    implementation 'javax.transaction:javax.transaction-api'
+    implementation 'jakarta.transaction:jakarta.transaction-api'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit' // excluding junit 4

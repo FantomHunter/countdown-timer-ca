@@ -1,6 +1,7 @@
 package com.codehunter.countdowntimer.ca.persistence;
 
-import javax.validation.*;
+import jakarta.validation.*;
+
 import java.util.Set;
 
 public abstract class SelfValidating<T> {
