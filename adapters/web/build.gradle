@@ -19,8 +19,8 @@ dependencies {
         exclude group: 'org.junit.vintage'
     }
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
-    testImplementation 'org.mockito:mockito-junit-jupiter:2.23.0'
-    testImplementation 'com.tngtech.archunit:archunit:0.9.3'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.28.2'
+    testImplementation 'com.tngtech.archunit:archunit:0.23.1'
     testImplementation 'de.adesso:junit-insights:1.1.0'
     testImplementation 'org.junit.platform:junit-platform-launcher:1.6.2'
 }
