@@ -1,6 +1,13 @@
 package com.codehunter.countdowntimer.ca.adapter.web.controller.config;
 
-import com.codehunter.countdowntimer.ca.core.port.in.*;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.ICreateEventWithUserUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IDeleteEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IDeleteEventWithUserUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventWithUserUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventUseCase;
+import com.codehunter.countdowntimer.ca.core.port.in.IUpdateEventWithUserUseCase;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -8,18 +15,24 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @TestConfiguration
-public class SpringSecurityWebTestConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityWebTestConfig {
 
     public static final String ROLE_USER = "USER";
     public static final String ROLE_ADMIN = "ADMIN";
@@ -33,21 +46,31 @@ public class SpringSecurityWebTestConfig extends WebSecurityConfigurerAdapter {
     public static final String USERNAME_USER = "user";
     public static final String USERNAME_ADMIN = "admin";
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {// @formatter:off
-        http.csrf().disable().cors()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/event/**")
-//                .hasAuthority("ROLE_USER")
-                .hasAnyRole(ROLE_USER, ROLE_ADMIN)
-                .anyRequest()
-                .authenticated()
-                .and()
-                .oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(getJwtAuthenticationConverter());
-    }//@formatter:on
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers("/event/**")
+                        .hasAnyRole(ROLE_USER, ROLE_ADMIN)
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(getJwtAuthenticationConverter())))
+        ;
+        return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("*");
+            }
+        };
+    }
 
     private Converter<Jwt, AbstractAuthenticationToken> getJwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
