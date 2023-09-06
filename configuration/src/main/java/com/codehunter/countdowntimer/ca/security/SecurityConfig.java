@@ -12,12 +12,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.Arrays;
@@ -25,8 +22,7 @@ import java.util.Collection;
 
 
 @Configuration
-@EnableWebSecurity
-@EnableWebMvc
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
     private static final String AUTHORITY_PREFIX = "ROLE_";
     //    private static final String CLAIM_ROLES = "roles";
@@ -35,28 +31,16 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
-        MvcRequestMatcher.Builder h2MatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/h2-console");
         http
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(mvcMatcherBuilder.pattern("/h2-console/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/h2-console")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui.html/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/v3/api-docs/**")).permitAll()
+                .securityMatcher("/event/**")
+                .authorizeHttpRequests(authz -> authz
                         .requestMatchers(mvcMatcherBuilder.pattern("/event/**")).hasAnyRole("user", "admin")
-                        .anyRequest().authenticated()
-                ).csrf(csrf -> csrf
-                        .ignoringRequestMatchers(h2ConsoleRequestMatcher()))
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(getJwtAuthenticationConverter())))
         ;
         return http.build();
-    }
-
-    @Bean
-    public RequestMatcher h2ConsoleRequestMatcher() {
-        return new AntPathRequestMatcher("/h2-console/**");
     }
 
     private Converter<Jwt, AbstractAuthenticationToken> getJwtAuthenticationConverter() {
@@ -75,6 +59,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.domain1.com:[*]", "https://localhost:[*]"));
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // setAllowCredentials(true) is important, otherwise:
