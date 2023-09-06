@@ -5,53 +5,43 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 
 @Configuration
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
     private static final String AUTHORITY_PREFIX = "ROLE_";
     //    private static final String CLAIM_ROLES = "roles";
     private static final String CLAIM_ROLES = "http://coundowntimer.com/roles";
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
         http
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/event/**")
-                        .hasAnyRole("user", "admin")
-                        .requestMatchers("/swagger-ui.html/**", "/swagger-ui/**", "/v3/api-docs/**")
-                        .permitAll()
-                        .anyRequest().authenticated()
-                )
+                .securityMatcher("/event/**")
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers(mvcMatcherBuilder.pattern("/event/**")).hasAnyRole("user", "admin")
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(getJwtAuthenticationConverter())))
+                .csrf(csrf -> csrf.disable())
         ;
         return http.build();
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("*");
-            }
-        };
     }
 
     private Converter<Jwt, AbstractAuthenticationToken> getJwtAuthenticationConverter() {
@@ -70,6 +60,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.domain1.com:[*]", "https://localhost:[*]"));
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // setAllowCredentials(true) is important, otherwise:
