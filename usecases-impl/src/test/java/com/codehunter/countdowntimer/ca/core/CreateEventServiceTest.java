@@ -10,9 +10,10 @@ import com.codehunter.countdowntimer.ca.domain.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,7 +29,7 @@ public class CreateEventServiceTest {
     void createEvent_withValidInput_thenDataIsPassedToPort() {
         ICreateEventUseCase.CreateEventIn createEventIn = new ICreateEventUseCase.CreateEventIn(
                 "event name",
-                new Date()
+                ZonedDateTime.now()
         );
 
         instanceTest.createEvent(createEventIn);
@@ -38,11 +39,11 @@ public class CreateEventServiceTest {
     @Test
     void createEvent_withValidInput_thenNewEventReturn() {
         when(createEventPort.createEvent(any(ICreateEventUseCase.CreateEventIn.class)))
-                .thenReturn(Event.withId(new Event.EventId(1L), "name", new Date()));
+                .thenReturn(Event.withId(new Event.EventId(1L), "name", ZonedDateTime.now()));
 
         ICreateEventUseCase.CreateEventIn createEventIn = new ICreateEventUseCase.CreateEventIn(
                 "event name",
-                new Date()
+                ZonedDateTime.now()
         );
 
         Event result = instanceTest.createEvent(createEventIn);
@@ -51,7 +52,7 @@ public class CreateEventServiceTest {
 
     @Test
     void createEventWithUser_withExistedUser_thenNewEventReturned() {
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         ICreateEventWithUserUseCase.CreateEventWithUserIn createEventWithUserIn = new ICreateEventWithUserUseCase.CreateEventWithUserIn(
                 User.withId("user-id", "username"),
                 "event name",
@@ -72,7 +73,7 @@ public class CreateEventServiceTest {
     @Test
     void createEventWithUser_withNonExistedUser_thenNewEventReturned() {
         User user = User.withId("user-id", "username");
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         ICreateEventWithUserUseCase.CreateEventWithUserIn createEventWithUserIn = new ICreateEventWithUserUseCase.CreateEventWithUserIn(
                 user,
                 "event name",

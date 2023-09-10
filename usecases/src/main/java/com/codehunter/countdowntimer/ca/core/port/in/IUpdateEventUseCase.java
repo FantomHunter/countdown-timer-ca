@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public interface IUpdateEventUseCase {
     String UPDATE_EVENT_SUCCESS = "Update event success";
@@ -18,9 +18,9 @@ public interface IUpdateEventUseCase {
     class UpdateEventIn extends SelfValidating<UpdateEventIn> {
         @NonNull Long id;
         @NonNull String name;
-        @NonNull Date time;
+        @NonNull ZonedDateTime time;
 
-        public UpdateEventIn(@NonNull Long id, @NonNull String name, @NonNull Date time) {
+        public UpdateEventIn(@NonNull Long id, @NonNull String name, @NonNull ZonedDateTime time) {
             this.id = id;
             this.name = name;
             this.time = time;

@@ -10,6 +10,9 @@ import com.codehunter.countdowntimer.ca.persistence.entity.EventStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static com.codehunter.countdowntimer.ca.util.DateTimeUtil.toInstant;
+import static com.codehunter.countdowntimer.ca.util.DateTimeUtil.toZonedDateTime;
+
 @Component
 @AllArgsConstructor
 public class EventMapper {
@@ -19,7 +22,7 @@ public class EventMapper {
         return new EventJpaEntity(
                 null,
                 event.getEventName(),
-                event.getEventDate(),
+                toInstant(event.getEventDate()),
                 EventStatus.CREATED,
                 null
         );
@@ -28,7 +31,7 @@ public class EventMapper {
     public EventJpaEntity mapToJpaEntity(ICreateEventWithUserUseCase.CreateEventWithUserIn event) {
         return new EventJpaEntity(null,
                 event.getEventName(),
-                event.getEventDate(),
+                toInstant(event.getEventDate()),
                 EventStatus.CREATED,
                 usermapper.mapToJpaEntity(event.getUser()));
     }
@@ -37,14 +40,14 @@ public class EventMapper {
         return Event.withId(
                 new Event.EventId(eventJpaEntity.getId()),
                 eventJpaEntity.getName(),
-                eventJpaEntity.getPublicTime());
+                toZonedDateTime(eventJpaEntity.getPublicTime()));
     }
 
     public EventJpaEntity mapToJpaEntity(IUpdateEventUseCase.UpdateEventIn event) {
         return new EventJpaEntity(
                 event.getId(),
                 event.getName(),
-                event.getTime(),
+                toInstant(event.getTime()),
                 EventStatus.UPDATED,
                 null
         );
@@ -54,7 +57,7 @@ public class EventMapper {
         return new EventJpaEntity(
                 event.getId(),
                 event.getName(),
-                event.getTime(),
+                toInstant(event.getTime()),
                 EventStatus.UPDATED,
                 usermapper.mapToJpaEntity(event.getUser())
         );

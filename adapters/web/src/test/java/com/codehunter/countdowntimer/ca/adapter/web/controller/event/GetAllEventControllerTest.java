@@ -12,6 +12,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.mockito.BDDMockito.then;
@@ -39,7 +44,7 @@ public class GetAllEventControllerTest {
     @Test
     void getAllEvent_withAdminCaseReturnData_thenReturnData() throws Exception {
         when(oauthUserUtil.hasAnyRole("ROLE_ADMIN")).thenReturn(true);
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         List<Event> eventList = Collections.singletonList(Event.withId(new Event.EventId(1L), "Event name", eventTime));
         when(getAllEventUseCase.getAllEvent()).thenReturn(eventList);
 
@@ -47,7 +52,7 @@ public class GetAllEventControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.events[0].id").value("1"))
                 .andExpect(jsonPath("$.events[0].title").value("Event name"))
-                .andExpect(jsonPath("$.events[0].time").value(eventTime.getTime()));
+                .andExpect(jsonPath("$.events[0].time").value(eventTime.format(DateTimeFormatter.ISO_INSTANT)));
     }
 
     @Test
@@ -65,8 +70,7 @@ public class GetAllEventControllerTest {
         when(oauthUserUtil.hasAnyRole("ROLE_ADMIN")).thenReturn(false);
         when(oauthUserUtil.hasAnyRole("ROLE_USER")).thenReturn(true);
         when(oauthUserUtil.getUserFromJwtPrincipal()).thenReturn(Optional.of(user));
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER,
-                18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         List<Event> eventList = Collections.singletonList(Event.withId(
                 new Event.EventId(1L),
                 "Event name",
@@ -77,7 +81,7 @@ public class GetAllEventControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.events[0].id").value("1"))
                 .andExpect(jsonPath("$.events[0].title").value("Event name"))
-                .andExpect(jsonPath("$.events[0].time").value(eventTime.getTime()));
+                .andExpect(jsonPath("$.events[0].time").value(eventTime.format(DateTimeFormatter.ISO_INSTANT)));
     }
 
     @Test

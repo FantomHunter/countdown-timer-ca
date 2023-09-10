@@ -1,9 +1,9 @@
 package com.codehunter.countdowntimer.ca.adapter.web.api.getallevent;
 
-import java.util.Date;
-import java.util.List;
-
 import lombok.Data;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 @Data
 public class GetAllEventResponse {
@@ -16,11 +16,15 @@ public class GetAllEventResponse {
     @Data
 	public static class EventResponse {
 
-        public static final String TEMPLATE = " {\n" + "    \"id\": \"%d\",\n" + "    \"title\": \"%s\",\n"
-                + "    \"time\": \"%s\"\n" + "}";
+        public static final String TEMPLATE = """
+                 {
+                    "id": "%d",
+                    "title": "%s",
+                    "time": "%s"
+                }""";
         private Long id;
         private String title;
-        private Date time;
+        private ZonedDateTime time;
     }
 
 }

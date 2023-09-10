@@ -18,9 +18,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.eq;
@@ -52,88 +53,90 @@ public class CreateEventControllerTest {
 //    @WithMockUser(username = "test", roles = SpringSecurityWebTestConfig.ROLE_ADMIN)
     void createEvent_withAdminAccount_thenStatus200AndDataIsPassedToService() throws Exception {
         when(createEventUseCase.createEvent(any(ICreateEventUseCase.CreateEventIn.class)))
-                .thenReturn(Event.withId(new Event.EventId(1L), "title", new Date()));
+                .thenReturn(Event.withId(new Event.EventId(1L), "title", ZonedDateTime.now()));
 
         mockMvc.perform(post("/event")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_ADMIN)
-                        .content(String.format(CreateEventRequest.TEMPLATE, "test", "2020-12-22"))
+                        .content(String.format(CreateEventRequest.TEMPLATE, "test", "2020-12-22T00:00:00.0Z"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
 //                .with(SecurityMockMvcRequestPostProcessors.csrf())
 //                        .with(SecurityMockMvcRequestPostProcessors.user("test").roles("ADMIN"))
         ).andExpect(status().isOk());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
-        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.DECEMBER, 22, 0, 0, 0), ZoneOffset.UTC);
 
         then(createEventUseCase).should()
                 .createEvent(eq(new ICreateEventUseCase.CreateEventIn("test",
-                        formatter.parse("2020-12-22"))));
+                        eventTime)));
     }
 
     @Test
     void createEvent_withoutEventName_status422AndErrorMessage() throws Exception {
         mockMvc.perform(post("/event")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_ADMIN)
-                .content("{\n" +
-                        "    \"eventTime\": \"2020-12-22\"\n" +
-                        "}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().is4xxClientError())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_ADMIN)
+                        .content("""
+                                {
+                                    "eventTime": "2020-12-22"
+                                }""")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().is4xxClientError())
                 .andExpect(status().reason("Invalid input"));
     }
 
     @Test
     void createEvent_withoutDate_status422AndErrorMessage() throws Exception {
         mockMvc.perform(post("/event")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_ADMIN)
-                .content("{\n" +
-                        "    \"name\": \"test\"\n" +
-                        "}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().is4xxClientError())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_ADMIN)
+                        .content("""
+                                {
+                                    "name": "test"
+                                }""")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().is4xxClientError())
                 .andExpect(status().reason("Invalid input"));
     }
 
     @Test
     void createEvent_withUserAccount_thenStatus200AndDataIsPassedToService() throws Exception {
         when(createEventWithUserUseCase.createEvent(any(ICreateEventWithUserUseCase.CreateEventWithUserIn.class)))
-                .thenReturn(Event.withId(new Event.EventId(1L), "title", new Date()));
+                .thenReturn(Event.withId(new Event.EventId(1L), "title", ZonedDateTime.now()));
 
         mockMvc.perform(post("/event")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_USER)
-                .content(String.format(CreateEventRequest.TEMPLATE, "test", "2020-12-22"))
+                .content(String.format(CreateEventRequest.TEMPLATE, "test", "2020-12-22T00:00:00.0Z"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         ).andExpect(status().isOk());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
-        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.DECEMBER, 22, 0, 0, 0), ZoneOffset.UTC);
         then(createEventWithUserUseCase).should()
                 .createEvent(eq(new ICreateEventWithUserUseCase.CreateEventWithUserIn(
                         User.withId(SpringSecurityWebTestConfig.USER_AUTH0ID, SpringSecurityWebTestConfig.USERNAME_USER),
                         "test",
-                        formatter.parse("2020-12-22"))));
+                        eventTime)));
     }
 
     @Test
     void createEvent_withUserAccountWithoutEventName_status422AndErrorMessage() throws Exception {
         mockMvc.perform(post("/event")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_USER)
-                .content("{\n" +
-                        "    \"eventTime\": \"2020-12-22\"\n" +
-                        "}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().is4xxClientError())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_USER)
+                        .content("""
+                                {
+                                    "eventTime": "2020-12-22"
+                                }""")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().is4xxClientError())
                 .andExpect(status().reason("Invalid input"));
     }
 
     @Test
     void createEvent_withUserAccountWithoutDate_status422AndErrorMessage() throws Exception {
         mockMvc.perform(post("/event")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_USER)
-                .content("{\n" +
-                        "    \"name\": \"test\"\n" +
-                        "}")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().is4xxClientError())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + SpringSecurityWebTestConfig.AUTH0_TOKEN_USER)
+                        .content("""
+                                {
+                                    "name": "test"
+                                }""")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().is4xxClientError())
                 .andExpect(status().reason("Invalid input"));
     }
 }

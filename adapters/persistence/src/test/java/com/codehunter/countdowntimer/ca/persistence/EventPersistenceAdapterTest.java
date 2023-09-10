@@ -17,20 +17,16 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import({EventPersistenceAdapter.class, EventMapper.class, UserMapper.class})
@@ -43,9 +39,8 @@ public class EventPersistenceAdapterTest {
 
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
-    void createEvent() throws ParseException {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date eventTime = simpleDateFormat.parse("2020-18-10");
+    void createEvent() {
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.SEPTEMBER, 18, 0, 0, 0), ZoneOffset.UTC);
 
         Event event = adapterUnderTest.createEvent(
                 new ICreateEventUseCase.CreateEventIn("event unit test", eventTime));
@@ -57,11 +52,11 @@ public class EventPersistenceAdapterTest {
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
     void getAllEvent_shouldReturn1Event() {
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         List<Event> expected = Collections.singletonList(Event.withId(new Event.EventId(1L), "event from sql unit test", eventTime));
         List<Event> actual = adapterUnderTest.getAllEvents();
         assertEquals(expected.size(), actual.size());
-        assertEquals(expected.get(0), actual.get(0));
+        assertEquals(expected.get(0).getDate().format(DateTimeFormatter.ISO_INSTANT), actual.get(0).getDate().format(DateTimeFormatter.ISO_INSTANT));
     }
 
     @Test
@@ -97,8 +92,8 @@ public class EventPersistenceAdapterTest {
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
     void updateEvent_withNotExistEvent_thenReturnException() {
-        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
-        IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(5L, "event update", updateTime);
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2021, Month.AUGUST, 15, 0, 0, 0), ZoneOffset.UTC);
+        IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(5L, "event update", eventTime);
         assertThrows(EntityNotFoundException.class,
                 () -> adapterUnderTest.updateEvent(input)
         );
@@ -107,7 +102,7 @@ public class EventPersistenceAdapterTest {
     @Test
     @Sql("EventPersistenceAdapterTest.sql")
     void updateEvent_withValidEvent_thenReturnUpdatedEvent() {
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(1L, "event updated", eventTime);
         Event actual = adapterUnderTest.updateEvent(input);
 
@@ -122,7 +117,7 @@ public class EventPersistenceAdapterTest {
     @Test
     @Sql("EventPersistenceAdapterTestV2.sql")
     void createEvent_withValidInput_thenReturnNewEvent() {
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         User userIn = User.withId("user-id", "user name");
         ICreateEventWithUserUseCase.CreateEventWithUserIn input = new ICreateEventWithUserUseCase.CreateEventWithUserIn(userIn, "event name", eventTime);
         Event actual = adapterUnderTest.createEvent(input);
@@ -200,7 +195,7 @@ public class EventPersistenceAdapterTest {
     @Sql("EventPersistenceAdapterTestV2.sql")
     void updateEventWithUser_withNotExistEvent_thenReturnException() {
         User user = User.withId("first-user-id", "hunter");
-        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        ZonedDateTime updateTime = ZonedDateTime.of(LocalDateTime.of(2021, Month.AUGUST, 15, 0, 0, 0), ZoneOffset.UTC);
         IUpdateEventWithUserUseCase.UpdateEventWithUserIn input = new IUpdateEventWithUserUseCase.UpdateEventWithUserIn(
                 5L, "event update", updateTime, user);
         assertThrows(EntityNotFoundException.class, () -> adapterUnderTest.updateEventWithUser(input));
@@ -210,7 +205,7 @@ public class EventPersistenceAdapterTest {
     @Sql("EventPersistenceAdapterTestV2.sql")
     void updateEventWithUser_withValidEvent_thenReturnUpdatedEvent() {
         User user = User.withId("first-user-id", "hunter");
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         IUpdateEventWithUserUseCase.UpdateEventWithUserIn input = new IUpdateEventWithUserUseCase.UpdateEventWithUserIn(
                 1L, "event updated", eventTime, user);
         Event actual = adapterUnderTest.updateEventWithUser(input);
