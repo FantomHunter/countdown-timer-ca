@@ -1,12 +1,8 @@
 package com.codehunter.countdowntimer.ca.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Value;
+import lombok.*;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
@@ -16,13 +12,13 @@ public class Event {
     @Getter
     private final String name;
     @Getter
-    private final Date date;
+    private final ZonedDateTime date;
 
-    public static Event withoutId(String name, Date date) {
+    public static Event withoutId(String name, ZonedDateTime date) {
         return new Event(null, name, date);
     }
 
-    public static Event withId(EventId eventId, String name, Date date) {
+    public static Event withId(EventId eventId, String name, ZonedDateTime date) {
         return new Event(eventId, name, date);
     }
 

@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public interface IUpdateEventWithUserUseCase {
 
@@ -20,10 +20,10 @@ public interface IUpdateEventWithUserUseCase {
     class UpdateEventWithUserIn extends SelfValidating<IUpdateEventWithUserUseCase.UpdateEventWithUserIn> {
         @NonNull Long id;
         @NonNull String name;
-        @NonNull Date time;
+        @NonNull ZonedDateTime time;
         @NonNull User user;
 
-        public UpdateEventWithUserIn(@NonNull Long id, @NonNull String name, @NonNull Date time, @NonNull User user) {
+        public UpdateEventWithUserIn(@NonNull Long id, @NonNull String name, @NonNull ZonedDateTime time, @NonNull User user) {
             this.id = id;
             this.name = name;
             this.time = time;

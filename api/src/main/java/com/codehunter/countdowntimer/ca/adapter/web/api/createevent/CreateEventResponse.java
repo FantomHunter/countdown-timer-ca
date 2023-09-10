@@ -2,16 +2,17 @@ package com.codehunter.countdowntimer.ca.adapter.web.api.createevent;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @Data
 public class CreateEventResponse {
-    public static final String TEMPLATE =  " {\n" +
-            "    \"id\": \"%d\",\n" +
-            "    \"title\": \"%s\",\n" +
-            "    \"time\": \"%s\"\n" +
-            "}";
+    public static final String TEMPLATE = """
+             {
+                "id": "%d",
+                "title": "%s",
+                "time": "%s"
+            }""";
     private Long id;
     private String title;
-    private Date time;
+    private ZonedDateTime time;
 }

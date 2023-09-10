@@ -5,14 +5,25 @@ import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.domain.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.when;
@@ -27,7 +38,16 @@ public class GetAllEventControllerTest {
             getAllEventWithUserUseCase,
             new GetAllEventConverter(),
             oauthUserUtil);
-    private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(this.getAllEventController).build();
+    private final MockMvc mockMvc;
+
+    {
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mockMvc = MockMvcBuilders.standaloneSetup(this.getAllEventController)
+                .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+                .build();
+    }
+
 
     @Test
     void getAllEvent_thenDataIsPassedToService() throws Exception {
@@ -39,7 +59,7 @@ public class GetAllEventControllerTest {
     @Test
     void getAllEvent_withAdminCaseReturnData_thenReturnData() throws Exception {
         when(oauthUserUtil.hasAnyRole("ROLE_ADMIN")).thenReturn(true);
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER, 18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         List<Event> eventList = Collections.singletonList(Event.withId(new Event.EventId(1L), "Event name", eventTime));
         when(getAllEventUseCase.getAllEvent()).thenReturn(eventList);
 
@@ -47,7 +67,7 @@ public class GetAllEventControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.events[0].id").value("1"))
                 .andExpect(jsonPath("$.events[0].title").value("Event name"))
-                .andExpect(jsonPath("$.events[0].time").value(eventTime.getTime()));
+                .andExpect(jsonPath("$.events[0].time").value(eventTime.format(DateTimeFormatter.ISO_INSTANT)));
     }
 
     @Test
@@ -65,8 +85,7 @@ public class GetAllEventControllerTest {
         when(oauthUserUtil.hasAnyRole("ROLE_ADMIN")).thenReturn(false);
         when(oauthUserUtil.hasAnyRole("ROLE_USER")).thenReturn(true);
         when(oauthUserUtil.getUserFromJwtPrincipal()).thenReturn(Optional.of(user));
-        Date eventTime = new GregorianCalendar(2020, Calendar.OCTOBER,
-                18, 16, 0, 0).getTime();
+        ZonedDateTime eventTime = ZonedDateTime.of(LocalDateTime.of(2020, Month.OCTOBER, 18, 16, 0, 0), ZoneOffset.UTC);
         List<Event> eventList = Collections.singletonList(Event.withId(
                 new Event.EventId(1L),
                 "Event name",
@@ -77,7 +96,7 @@ public class GetAllEventControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.events[0].id").value("1"))
                 .andExpect(jsonPath("$.events[0].title").value("Event name"))
-                .andExpect(jsonPath("$.events[0].time").value(eventTime.getTime()));
+                .andExpect(jsonPath("$.events[0].time").value(eventTime.format(DateTimeFormatter.ISO_INSTANT)));
     }
 
     @Test

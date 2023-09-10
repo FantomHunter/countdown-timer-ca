@@ -9,9 +9,10 @@ import com.codehunter.countdowntimer.ca.domain.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.*;
@@ -26,7 +27,7 @@ public class UpdateEventServiceTest {
     void updateEvent_withInvalidEvent_thenReturnUpdateFailMessage() {
         when(hasEventPort.hasEvent(anyLong())).thenReturn(false);
 
-        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        ZonedDateTime updateTime = ZonedDateTime.of(LocalDateTime.of(2021, Month.AUGUST, 15, 0, 0, 0), ZoneOffset.UTC);
         IUpdateEventUseCase.UpdateEventIn input = new IUpdateEventUseCase.UpdateEventIn(5L, "event update", updateTime);
         String actual = updateEventService.updateEvent(input);
         assertEquals(actual, IUpdateEventUseCase.UPDATE_EVENT_NOT_EXIST);
@@ -34,7 +35,7 @@ public class UpdateEventServiceTest {
 
     @Test
     void updateEvent_withValidEvent_thenReturnUpdateSuccessMessage() {
-        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        ZonedDateTime updateTime = ZonedDateTime.of(LocalDateTime.of(2021, Month.AUGUST, 15, 0, 0, 0), ZoneOffset.UTC);
         when(hasEventPort.hasEvent(anyLong())).thenReturn(true);
         when(updateEventPort.updateEvent(any(IUpdateEventUseCase.UpdateEventIn.class)))
                 .thenReturn(Event.withId(new Event.EventId(1L), "event update", updateTime));
@@ -58,7 +59,7 @@ public class UpdateEventServiceTest {
     @Test
     void updateEventWithUser_withInvalidEvent_thenReturnUpdateFailMessage() {
         when(hasEventPort.hasEventWithUser(anyLong(), any(User.class))).thenReturn(false);
-        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        ZonedDateTime updateTime = ZonedDateTime.of(LocalDateTime.of(2021, Month.AUGUST, 15, 0, 0, 0), ZoneOffset.UTC);
         IUpdateEventWithUserUseCase.UpdateEventWithUserIn input = new IUpdateEventWithUserUseCase.UpdateEventWithUserIn(
                 5L, "event update", updateTime, User.withId("id", "name"));
         String actual = updateEventWithUserUseCase.updateEventWithUser(input);
@@ -67,7 +68,7 @@ public class UpdateEventServiceTest {
 
     @Test
     void updateEventWithUser_withValidEvent_thenReturnUpdateSuccessMessage() {
-        Date updateTime = new GregorianCalendar(2021, Calendar.AUGUST, 15).getTime();
+        ZonedDateTime updateTime = ZonedDateTime.of(LocalDateTime.of(2021, Month.AUGUST, 15, 0, 0, 0), ZoneOffset.UTC);
         when(hasEventPort.hasEventWithUser(anyLong(), any(User.class))).thenReturn(true);
         when(updateEventPort.updateEventWithUser(any(IUpdateEventWithUserUseCase.UpdateEventWithUserIn.class)))
                 .thenReturn(Event.withId(new Event.EventId(1L), "event update", updateTime));

@@ -41,7 +41,7 @@ public class GetAllEventController implements IGetAllEventApi {
             events.addAll(allEventWithUser);
         }
         response.setEvents(events.stream()
-                .map(event -> getAllEventConverter.convertToGetAllEventResponse(event))
+                .map(getAllEventConverter::convertToGetAllEventResponse)
                 .collect(Collectors.toList()));
         return response;
     }

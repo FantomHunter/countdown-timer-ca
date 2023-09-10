@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public interface ICreateEventUseCase {
     Event createEvent(CreateEventIn createEventIn);
@@ -16,9 +16,9 @@ public interface ICreateEventUseCase {
     class CreateEventIn extends SelfValidating<CreateEventIn> {
         @NonNull String eventName;
 
-        @NonNull Date eventDate;
+        @NonNull ZonedDateTime eventDate;
 
-        public CreateEventIn(@NonNull String eventName, @NonNull Date eventDate) {
+        public CreateEventIn(@NonNull String eventName, @NonNull ZonedDateTime eventDate) {
             this.eventName = eventName;
             this.eventDate = eventDate;
             this.validateSelf();
