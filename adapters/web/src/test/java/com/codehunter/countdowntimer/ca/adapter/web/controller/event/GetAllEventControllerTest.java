@@ -5,9 +5,13 @@ import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventUseCase;
 import com.codehunter.countdowntimer.ca.core.port.in.IGetAllEventWithUserUseCase;
 import com.codehunter.countdowntimer.ca.domain.Event;
 import com.codehunter.countdowntimer.ca.domain.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -17,7 +21,9 @@ import java.time.Month;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.when;
@@ -32,7 +38,16 @@ public class GetAllEventControllerTest {
             getAllEventWithUserUseCase,
             new GetAllEventConverter(),
             oauthUserUtil);
-    private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(this.getAllEventController).build();
+    private final MockMvc mockMvc;
+
+    {
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mockMvc = MockMvcBuilders.standaloneSetup(this.getAllEventController)
+                .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+                .build();
+    }
+
 
     @Test
     void getAllEvent_thenDataIsPassedToService() throws Exception {
