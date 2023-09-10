@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(getJwtAuthenticationConverter())))
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         ;
         return http.build();
     }
@@ -60,8 +61,8 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.domain1.com:[*]", "https://localhost:[*]"));
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.domain1.com:[*]", "https://localhost:[*]", "http://localhost:[*]"));
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // setAllowCredentials(true) is important, otherwise:
         // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
