@@ -34,7 +34,7 @@ public class UpdateEventControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/event/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22"))
+                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22T00:00:00.0Z"))
         ).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.result").value(UpdateEventResponse.UPDATE_SUCCESS));
@@ -48,7 +48,7 @@ public class UpdateEventControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/event/5")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22"))
+                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22T00:00:00.0Z"))
         ).andExpect(status().is4xxClientError())
                 .andExpect(status().reason(UpdateEventResponse.UPDATE_FAIL));
 
@@ -64,7 +64,7 @@ public class UpdateEventControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/event/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22"))
+                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22T00:00:00.0Z"))
         ).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.result").value(UpdateEventResponse.UPDATE_SUCCESS));
@@ -79,7 +79,7 @@ public class UpdateEventControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/event/5")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22"))
+                        .content(String.format(UpdateEventRequest.TEMPLATE, "update event", "2020-12-22T00:00:00.0Z"))
         ).andExpect(status().is4xxClientError())
                 .andExpect(status().reason(UpdateEventResponse.UPDATE_FAIL));
 
