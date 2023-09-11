@@ -22,7 +22,6 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.tngtech.archunit:archunit:1.1.0'
-    testImplementation 'de.adesso:junit-insights:1.1.0'
     testImplementation 'com.h2database:h2'
 
 }
@@ -30,6 +29,5 @@ dependencies {
 test {
     exclude 'com/codehunter/countdowntimer/ca/*IntegrationTest*'
     useJUnitPlatform()
-    systemProperty 'de.adesso.junitinsights.enabled', 'true'
 }
 
