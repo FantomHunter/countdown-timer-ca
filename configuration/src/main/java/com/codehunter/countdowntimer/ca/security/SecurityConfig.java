@@ -1,5 +1,6 @@
 package com.codehunter.countdowntimer.ca.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -7,7 +8,9 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,6 +30,10 @@ public class SecurityConfig {
     private static final String AUTHORITY_PREFIX = "ROLE_";
     //    private static final String CLAIM_ROLES = "roles";
     private static final String CLAIM_ROLES = "http://coundowntimer.com/roles";
+    @Value("${auth0.audience}")
+    private String audience;
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuer;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
@@ -34,11 +41,14 @@ public class SecurityConfig {
         http
                 .securityMatcher("/event/**")
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(mvcMatcherBuilder.pattern("/event/**")).hasAnyRole("user", "admin")
+//                        .requestMatchers(mvcMatcherBuilder.pattern("/event/**")).hasAnyRole("user", "admin")
+                        .requestMatchers(mvcMatcherBuilder.pattern("/event/**"))
+                        .hasAnyAuthority("events:read", "events:write", "events:admin")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(getJwtAuthenticationConverter())))
+                        .jwt(jwt -> jwt.decoder(jwtDecoder())))
+//                        .jwt(jwt -> jwt
+//                                .jwtAuthenticationConverter(getJwtAuthenticationConverter())))
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         ;
@@ -73,5 +83,24 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() {
+        /*
+        By default, Spring Security does not validate the "aud" claim of the token, to ensure that this token is
+        indeed intended for our app. Adding our own validator is easy to do:
+        */
+
+        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder)
+                JwtDecoders.fromOidcIssuerLocation(issuer);
+
+        OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(audience);
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
+        OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
+
+        jwtDecoder.setJwtValidator(withAudience);
+
+        return jwtDecoder;
     }
 }
