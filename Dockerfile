@@ -11,7 +11,7 @@ WORKDIR /code
 COPY . .
 #
 # # Build a release artifact.
-RUN gradle clean build
+RUN gradle clean build --no-daemon
 
 
 #
