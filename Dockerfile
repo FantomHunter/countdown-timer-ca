@@ -20,7 +20,7 @@ RUN gradle clean build --no-daemon
 # It's important to use OpenJDK 8u191 or above that has container support enabled.
 # https://hub.docker.com/r/adoptopenjdk/openjdk8
 # https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
-FROM openjdk:17.0.2-jdk-slim
+FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 # Copy the jar to the production image from the builder stage.
