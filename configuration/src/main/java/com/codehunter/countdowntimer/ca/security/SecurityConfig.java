@@ -61,8 +61,12 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("https://*.domain1.com:[*]", "https://localhost:[*]", "http://localhost:[*]"));
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedOriginPatterns(Arrays.asList(
+//                "https://*.domain1.com:[*]",
+//                "https://coundown-timer-service.onrender.com:[*]",
+//                "https://localhost:[*]",
+//                "http://localhost:[*]"));
+        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // setAllowCredentials(true) is important, otherwise:
         // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
