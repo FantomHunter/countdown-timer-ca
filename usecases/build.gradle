@@ -10,7 +10,7 @@ dependencies {
     implementation 'jakarta.transaction:jakarta.transaction-api'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'com.tngtech.archunit:archunit:1.1.0'
+    testImplementation 'com.tngtech.archunit:archunit:1.2.1'
 }
 
 test {
